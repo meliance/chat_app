@@ -14,10 +14,8 @@ const Sidebar = () => {
     getUsers();
   }, [getUsers]);
 
-  // ✅ THE FIX: Force it to be an array. If 'users' is an error object or undefined, fallback to []
   const safeUsers = Array.isArray(users) ? users : [];
 
-  // ✅ Use 'safeUsers' here instead of 'users'
   const filteredUsers = showOnlineOnly
     ? safeUsers.filter((user) => onlineUsers?.includes(user._id))
     : safeUsers;
