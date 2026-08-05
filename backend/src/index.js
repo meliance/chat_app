@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import dns from "node:dns";
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
+// import dns from "node:dns";
+// dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 import path from "path";
 
@@ -18,6 +18,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
+app.use(express.json({ limit: "10mb" }));
 
 app.use(express.json());
 app.use(cookieParser());
