@@ -2,20 +2,26 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 import path from "path";
+import dns from "node:dns";
+
+dotenv.config();
+
+// ✅ FIX 1: Only use the DNS hack locally. Automatically turns off on Render!
+if (process.env.NODE_ENV !== "production") {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+}
 
 import { connectDB } from "./lib/db.js";
-
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
-dotenv.config();
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
-app.use(express.json({ limit: "10mb" }));
+
+// ✅ FIX 2: We only call express.json once, with the 10mb limit included.
+app.use(express.json({ limit: "10mb" })); 
 
 app.use(cookieParser());
 app.use(
@@ -37,6 +43,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 server.listen(PORT, () => {
-  console.log("server is running on PORT:" + PORT);
+  // Added a small log tag so we can verify Render gets the new code!
+  console.log("server is running on PORT:" + PORT + " (DNS fixed)");
   connectDB();
 });
